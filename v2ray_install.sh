@@ -9,6 +9,9 @@ echo "准备安装V2Ray"
 bash <(curl -L -s https://install.direct/go.sh)
 
 read -p "输入域名： " udomain
+read -p "输入用户UUID： " uuid
+read -p "输入传输方式(tcp或ws，默认ws)： " utype
+[ -z "${utype}" ] && utype = "ws"
 #安装 acmey.sh依赖
 apt-get install socat
 #安装 acme.sh
@@ -35,14 +38,14 @@ echo -e "{
     \"settings\": {
       \"clients\": [
         {
-          \"id\": \"bc7e3ae8-71e9-4a84-acb0-70cb4c3ff3b7\",
+          \"id\": \"$uuid\",
           \"level\": 1,
           \"alterId\": 64
         }
       ]
     },
     \"streamSettings\":{
-      \"network\": \"ws\",
+      \"network\": \"$utype\",
       \"security\": \"tls\",
       \"tlsSettings\": {
         \"allowInsecure\" : false,
