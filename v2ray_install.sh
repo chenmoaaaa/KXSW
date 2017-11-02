@@ -11,7 +11,7 @@ bash <(curl -L -s https://install.direct/go.sh)
 read -p "输入域名： " udomain
 read -p "输入用户UUID： " uuid
 read -p "输入传输方式(tcp或ws，默认ws)： " utype
-[ -z "${utype}" ] && utype = "ws"
+[ -z "${utype}" ] && utype="ws"
 #安装 acmey.sh依赖
 apt-get install socat
 #安装 acme.sh
