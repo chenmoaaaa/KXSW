@@ -11,10 +11,10 @@ function install_component() {
   local COMPONENT=$1
   COMPONENT_CMD=$(command -v $COMPONENT)
   if [ -n "${COMPONENT_CMD}" ]; then
+    echo "$COMPONENT was installed";
     return
   fi
 
-  update_software
   if [ -n "${YUM_CMD}" ]; then
     echo "Installing ${COMPONENT} via yum."
     ${YUM_CMD} -y -q install $COMPONENT
