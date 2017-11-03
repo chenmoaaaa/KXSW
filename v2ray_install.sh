@@ -41,6 +41,7 @@ curl  https://get.acme.sh | sh
 source ~/.bashrc
 #证书生成
 echo "生成证书..."
+iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
 ~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 echo "安装证书..."
 #证书安装
