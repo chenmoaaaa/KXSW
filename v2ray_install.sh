@@ -36,7 +36,7 @@ echo -e "{
     \"loglevel\": \"warning\"
   },
   \"inbound\": {
-    \"port\": $uport,
+    \"port\": $uport2,
     \"protocol\": \"vmess\",
     \"settings\": {
       \"clients\": [
@@ -48,22 +48,12 @@ echo -e "{
       ]
     },
     \"streamSettings\":{
-      \"network\": \"$utype\",
-      \"security\": \"tls\",
-      \"tlsSettings\": {
-        \"allowInsecure\" : false,
-        \"certificates\": [
-          {
-            \"certificateFile\": \"/etc/v2ray/v2ray.crt\",
-            \"keyFile\": \"/etc/v2ray/v2ray.key\"
-          }
-        ]
-      }
+      \"network\": \"$utype\"
     }
   },
   \"inboundDetour\":[
     {
-      \"port\": $uport2,
+      \"port\": $uport,
       \"protocol\": \"vmess\",
       \"settings\": {
         \"clients\": [
@@ -76,7 +66,16 @@ echo -e "{
       },
       \"streamSettings\":{
         \"network\": \"$utype\",
-        \"security\": \"no\"
+        \"security\": \"tls\",
+        \"tlsSettings\": {
+          \"allowInsecure\" : true,
+          \"certificates\": [
+            {
+              \"certificateFile\": \"/etc/v2ray/v2ray.crt\",
+              \"keyFile\": \"/etc/v2ray/v2ray.key\"
+            }
+          ]
+        }
       }
     }
   ],
