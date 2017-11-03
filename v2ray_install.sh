@@ -24,10 +24,6 @@ function install_component() {
   fi
 }
 
-#V2Ray Install
-echo "准备安装V2Ray，websock+tls与tcp+tls方式"
-bash <(curl -L -s https://install.direct/go.sh)
-
 read -p "输入TLS域名： " domain
 read -p "输入tcp的TLS端口： " port
 read -p "输入ws的TLS端口：" port2
@@ -47,11 +43,11 @@ curl  https://get.acme.sh | sh
 source ~/.bashrc
 #证书生成
 echo "生成证书..."
-~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
+~/.acme.sh/acme.sh --issue -d $domain --force --standalone -k ec-256
 echo "安装证书..."
 #证书安装
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
-#mkdir /etc/v2ray
+mkdir /etc/v2ray
 UUID=$(cat /proc/sys/kernel/random/uuid)
 echo -e "{
   \"log\" : {
@@ -153,6 +149,10 @@ echo -e "{
     }
   }
 }" > /etc/v2ray/config.json
+
+#V2Ray Install
+echo "准备安装V2Ray，websock+tls与tcp+tls方式"
+bash <(curl -L -s https://install.direct/go.sh)
 
 echo "安装完成，传输方式为ws+tls和tcp+tls。"
 echo "域名：$domain"
