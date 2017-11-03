@@ -4,6 +4,25 @@ export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #Check Root
 [ $(id -u) != "0" ] && { echo "Error: You must be root to run this script"; exit 1; }
 
+#检查系统
+check_sys(){
+  if [[ -f /etc/redhat-release ]]; then
+    release="centos"
+  elif cat /etc/issue | grep -q -E -i "debian"; then
+    release="debian"
+  elif cat /etc/issue | grep -q -E -i "ubuntu"; then
+    release="ubuntu"
+  elif cat /etc/issue | grep -q -E -i "centos|red hat|redhat"; then
+    release="centos"
+  elif cat /proc/version | grep -q -E -i "debian"; then
+    release="debian"
+  elif cat /proc/version | grep -q -E -i "ubuntu"; then
+    release="ubuntu"
+  elif cat /proc/version | grep -q -E -i "centos|red hat|redhat"; then
+    release="centos"
+    fi
+}
+
 YUM_CMD=$(command -v yum)
 APT_CMD=$(command -v apt-get)
 
@@ -29,11 +48,19 @@ read -p "输入tcp的TLS端口： " port
 read -p "输入ws的TLS端口：" port2
 #read -p "输入传输方式(tcp或ws，默认ws)： " network
 # [ -z "${network}" ] && network="ws"
-
+check_sys 
+if [ ${release} == "centos" ]; then
+  systemctl stop firewalld
+  systemctl disable firewalld
+  yum -y install iptables-services
+fi
 iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
 iptables -I INPUT 1 -p tcp --dport $port -j ACCEPT
 iptables -I INPUT 1 -p tcp --dport $port2 -j ACCEPT
+service iptables save
+service iptables restart
+
 
 #安装 acmey.sh依赖
 install_component "socat"
@@ -150,7 +177,7 @@ echo -e "{
   }
 }" > /etc/v2ray/config.json
 
-#V2Ray Install
+#V安装2Ray
 echo "准备安装V2Ray，websock+tls与tcp+tls方式"
 bash <(curl -L -s https://install.direct/go.sh)
 
