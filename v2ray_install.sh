@@ -4,6 +4,26 @@ export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 #Check Root
 [ $(id -u) != "0" ] && { echo "Error: You must be root to run this script"; exit 1; }
 
+YUM_CMD=$(command -v yum)
+APT_CMD=$(command -v apt-get)
+
+function install_component() {
+  local COMPONENT=$1
+  COMPONENT_CMD=$(command -v $COMPONENT)
+  if [ -n "${COMPONENT_CMD}" ]; then
+    return
+  fi
+
+  update_software
+  if [ -n "${YUM_CMD}" ]; then
+    echo "Installing ${COMPONENT} via yum."
+    ${YUM_CMD} -y -q install $COMPONENT
+  elif [ -n "${APT_CMD}" ]; then
+    echo "Installing ${COMPONENT} via apt-get."
+    ${APT_CMD} -y -qq install $COMPONENT
+  fi
+}
+
 #V2Ray Install
 echo "准备安装V2Ray，websock+tls与tcp+tls方式"
 bash <(curl -L -s https://install.direct/go.sh)
@@ -14,7 +34,7 @@ read -p "输入ws的TLS端口：" port2
 #read -p "输入传输方式(tcp或ws，默认ws)： " network
 # [ -z "${network}" ] && network="ws"
 #安装 acmey.sh依赖
-apt-get install socat
+install_component "socat"
 #安装 acme.sh
 curl  https://get.acme.sh | sh
 #确保acme.sh脚本所设置的命令别名生效
