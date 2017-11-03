@@ -12,7 +12,7 @@ read -p "输入TLS域名： " udomain
 read -p "输入TLS端口： " uport
 #无tls的端口
 uport2=$[uport + 1]
-echo "无TLS的端口为：$uport2"
+echo "无TLS的TCP端口为：$uport2"
 read -p "输入用户UUID： " uuid
 read -p "输入传输方式(tcp或ws，默认ws)： " utype
 [ -z "${utype}" ] && utype="ws"
@@ -36,7 +36,7 @@ echo -e "{
     \"loglevel\": \"warning\"
   },
   \"inbound\": {
-    \"port\": $uport2,
+    \"port\": $uport,
     \"protocol\": \"vmess\",
     \"settings\": {
       \"clients\": [
@@ -48,12 +48,22 @@ echo -e "{
       ]
     },
     \"streamSettings\":{
-      \"network\": \"$utype\"
+      \"network\": \"$utype\",
+      \"security\": \"tls\",
+      \"tlsSettings\": {
+        \"allowInsecure\" : true,
+        \"certificates\": [
+          {
+            \"certificateFile\": \"/etc/v2ray/v2ray.crt\",
+            \"keyFile\": \"/etc/v2ray/v2ray.key\"
+          }
+        ]
+      }
     }
   },
   \"inboundDetour\":[
     {
-      \"port\": $uport,
+      \"port\": $uport2,
       \"protocol\": \"vmess\",
       \"settings\": {
         \"clients\": [
@@ -65,17 +75,7 @@ echo -e "{
         ]
       },
       \"streamSettings\":{
-        \"network\": \"$utype\",
-        \"security\": \"tls\",
-        \"tlsSettings\": {
-          \"allowInsecure\" : true,
-          \"certificates\": [
-            {
-              \"certificateFile\": \"/etc/v2ray/v2ray.crt\",
-              \"keyFile\": \"/etc/v2ray/v2ray.key\"
-            }
-          ]
-        }
+        \"network\": \"tcp\"
       }
     }
   ],
