@@ -5,7 +5,7 @@ export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 [ $(id -u) != "0" ] && { echo "Error: You must be root to run this script"; exit 1; }
 
 #V2Ray Install
-echo "准备安装V2Ray"
+echo "准备安装V2Ray，传输方式为无TLS的tcp和有TLS的ws"
 bash <(curl -L -s https://install.direct/go.sh)
 
 read -p "输入TLS域名： " udomain
@@ -14,7 +14,7 @@ read -p "输入TLS端口： " uport
 uport2=$[uport + 1]
 echo "无TLS的TCP端口为：$uport2"
 read -p "输入用户UUID： " uuid
-read -p "输入传输方式(tcp或ws，默认ws)： " utype
+#read -p "输入传输方式(tcp或ws，默认ws)： " utype
 [ -z "${utype}" ] && utype="ws"
 #安装 acmey.sh依赖
 apt-get install socat
