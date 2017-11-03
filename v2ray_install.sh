@@ -33,6 +33,12 @@ read -p "输入tcp的TLS端口： " port
 read -p "输入ws的TLS端口：" port2
 #read -p "输入传输方式(tcp或ws，默认ws)： " network
 # [ -z "${network}" ] && network="ws"
+
+iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport $port -j ACCEPT
+iptables -I INPUT 1 -p tcp --dport $port2 -j ACCEPT
+
 #安装 acmey.sh依赖
 install_component "socat"
 #安装 acme.sh
@@ -41,7 +47,6 @@ curl  https://get.acme.sh | sh
 source ~/.bashrc
 #证书生成
 echo "生成证书..."
-iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
 ~/.acme.sh/acme.sh --issue -d $domain --standalone -k ec-256
 echo "安装证书..."
 #证书安装
