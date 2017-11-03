@@ -8,7 +8,11 @@ export PATH=/usr/local/sbin:/usr/local/bin:/sbin:/bin:/usr/sbin:/usr/bin
 echo "准备安装V2Ray"
 bash <(curl -L -s https://install.direct/go.sh)
 
-read -p "输入域名： " udomain
+read -p "输入TLS域名： " udomain
+read -p "输入TLS端口： " uport
+#无tls的端口
+uport2=$[uport + 1]
+echo "无TLS的端口为：$uport2"
 read -p "输入用户UUID： " uuid
 read -p "输入传输方式(tcp或ws，默认ws)： " utype
 [ -z "${utype}" ] && utype="ws"
@@ -24,7 +28,6 @@ echo "生成证书..."
 echo "安装证书..."
 #证书安装
 ~/.acme.sh/acme.sh --installcert -d $udomain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
-
 #mkdir /etc/v2ray
 echo -e "{
   \"log\" : {
@@ -33,7 +36,7 @@ echo -e "{
     \"loglevel\": \"warning\"
   },
   \"inbound\": {
-    \"port\": 443,
+    \"port\": $uport,
     \"protocol\": \"vmess\",
     \"settings\": {
       \"clients\": [
@@ -59,7 +62,23 @@ echo -e "{
     }
   },
   \"inboundDetour\":[
-    
+    {
+      \"port\": $uport2,
+      \"protocol\": \"vmess\",
+      \"settings\": {
+        \"clients\": [
+          {
+            \"id\": \"$uuid\",
+            \"level\": 1,
+            \"alterId\": 64
+          }
+        ]
+      },
+      \"streamSettings\":{
+        \"network\": \"$utype\",
+        \"security\": \"no\"
+      }
+    }
   ],
   \"outbound\": {
     \"protocol\": \"freedom\",
