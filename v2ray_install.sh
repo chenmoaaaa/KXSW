@@ -48,7 +48,7 @@ echo -e "{
       ]
     },
     \"streamSettings\":{
-      \"network\": \"$utype\",
+      \"network\": \"ws\",
       \"security\": \"tls\",
       \"tlsSettings\": {
         \"allowInsecure\" : true,
