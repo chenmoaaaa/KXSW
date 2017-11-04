@@ -54,6 +54,7 @@ if [ ${release} == "centos" ]; then
   systemctl disable firewalld
   yum -y install iptables-services
 fi
+service iptables restart
 iptables -I INPUT 1 -p tcp --dport 80 -j ACCEPT
 iptables -I INPUT 1 -p tcp --dport 443 -j ACCEPT
 iptables -I INPUT 1 -p tcp --dport $port -j ACCEPT
@@ -136,6 +137,24 @@ echo -e "{
       }
     }
   ],
+  \"transport\": {
+    \"tcpSettings\": {
+      \"header\": {
+        \"type\": \"http\",
+        \"response\": {
+          \"version\": \"1.1\",
+          \"status\": \"200\",
+          \"reason\": \"OK\",
+          \"headers\": {
+            \"Content-Type\": [\"application/octet-stream\", \"application/x-msdownload\", \"text/html\", \"application/x-shockwave-flash\"],
+            \"Transfer-Encoding\": [\"chunked\"],
+            \"Connection\": [\"keep-alive\"],
+            \"Pragma\": \"no-cache\"
+          }
+        }
+      }
+    }
+  },
   \"outbound\": {
     \"protocol\": \"freedom\",
     \"settings\": {}
