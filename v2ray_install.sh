@@ -107,6 +107,22 @@ echo -e "{
             \"keyFile\": \"/etc/v2ray/v2ray.key\"
           }
         ]
+      },
+      \"tcpSettings\": {
+        \"header\": {
+          \"type\": \"http\",
+          \"response\": {
+            \"version\": \"1.1\",
+            \"status\": \"200\",
+            \"reason\": \"OK\",
+            \"headers\": {
+              \"Content-Type\": [\"application/octet-stream\", \"application/x-msdownload\", \"text/html\", \"application/x-shockwave-flash\"],
+              \"Transfer-Encoding\": [\"chunked\"],
+              \"Connection\": [\"keep-alive\"],
+              \"Pragma\": \"no-cache\"
+            }
+          }
+        }
       }
     }
   },
@@ -138,24 +154,6 @@ echo -e "{
       }
     }
   ],
-  \"transport\": {
-    \"tcpSettings\": {
-      \"header\": {
-        \"type\": \"http\",
-        \"response\": {
-          \"version\": \"1.1\",
-          \"status\": \"200\",
-          \"reason\": \"OK\",
-          \"headers\": {
-            \"Content-Type\": [\"application/octet-stream\", \"application/x-msdownload\", \"text/html\", \"application/x-shockwave-flash\"],
-            \"Transfer-Encoding\": [\"chunked\"],
-            \"Connection\": [\"keep-alive\"],
-            \"Pragma\": \"no-cache\"
-          }
-        }
-      }
-    }
-  },
   \"outbound\": {
     \"protocol\": \"freedom\",
     \"settings\": {}
