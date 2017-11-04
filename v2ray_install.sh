@@ -62,7 +62,9 @@ iptables -I INPUT 1 -p tcp --dport $port2 -j ACCEPT
 service iptables save
 service iptables restart
 
-
+service v2ray stop
+rm -rf /etc/v2ray
+mkdir -p /etc/v2ray
 #安装 acmey.sh依赖
 install_component "socat"
 #安装 acme.sh
@@ -74,9 +76,7 @@ echo "生成证书..."
 ~/.acme.sh/acme.sh --issue -d $domain --force --standalone -k ec-256
 echo "安装证书..."
 #证书安装
-~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
-rm -rf /etc/v2ray
-mkdir -p /etc/v2ray
+~/.acme.sh/acme.sh --installcert -d fun90.ml --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
 UUID=$(cat /proc/sys/kernel/random/uuid)
 echo -e "{
   \"log\" : {
