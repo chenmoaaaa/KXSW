@@ -75,7 +75,8 @@ echo "生成证书..."
 echo "安装证书..."
 #证书安装
 ~/.acme.sh/acme.sh --installcert -d $domain --fullchainpath /etc/v2ray/v2ray.crt --keypath /etc/v2ray/v2ray.key --ecc
-mkdir /etc/v2ray
+rm -rf /etc/v2ray
+mkdir -p /etc/v2ray
 UUID=$(cat /proc/sys/kernel/random/uuid)
 echo -e "{
   \"log\" : {
@@ -198,7 +199,7 @@ echo -e "{
 
 #V安装2Ray
 echo "准备安装V2Ray，websock+tls与tcp+tls方式"
-bash <(curl -L -s https://install.direct/go.sh)
+bash <(curl -L -s https://raw.githubusercontent.com/fun90/install/master/go.sh)
 
 echo "安装完成，传输方式为ws+tls和tcp+tls。"
 echo "域名：$domain"
